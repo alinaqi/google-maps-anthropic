@@ -10,6 +10,8 @@ A FastAPI application that combines Claude AI with Google Maps API to provide in
 - CORS enabled for frontend integration
 - Proper error handling and logging
 - Type-safe with Pydantic models
+- User profile-based recommendations
+- Location-aware contextual search
 
 ## Prerequisites
 
@@ -85,32 +87,68 @@ Search for locations using natural language queries.
 }
 ```
 
-## Test Examples
+## User Profiles
 
-Here are some example queries you can try:
+The application supports different user profiles with specific interests:
 
-1. Finding a coffee shop:
+1. Family with Young Children
+   - Interests: schools, parks, family restaurants, playgrounds, pediatric clinics, supermarkets
+   ```bash
+   curl -X POST http://localhost:8010/api/search \
+     -H "Content-Type: application/json" \
+     -d '{"query": "Find family-friendly restaurants near Dubai Marina"}'
+   ```
+
+2. Single Professional
+   - Interests: gyms, cafes, restaurants, coworking spaces, entertainment
+   ```bash
+   curl -X POST http://localhost:8010/api/search \
+     -H "Content-Type: application/json" \
+     -d '{"query": "Show me coworking spaces near Business Bay"}'
+   ```
+
+3. Family without Children
+   - Interests: fine dining, shopping, cultural venues, fitness centers, date spots
+   ```bash
+   curl -X POST http://localhost:8010/api/search \
+     -H "Content-Type: application/json" \
+     -d '{"query": "Find romantic restaurants near Palm Jumeirah"}'
+   ```
+
+4. Senior Citizens
+   - Interests: medical facilities, parks, community centers, quiet restaurants, pharmacies
+   ```bash
+   curl -X POST http://localhost:8010/api/search \
+     -H "Content-Type: application/json" \
+     -d '{"query": "Show me medical facilities near Dubai Healthcare City"}'
+   ```
+
+## Dubai-Specific Examples
+
+Here are some Dubai-specific location queries you can try:
+
+1. Area Exploration:
 ```bash
 curl -X POST http://localhost:8010/api/search \
   -H "Content-Type: application/json" \
-  -d '{"query": "Find me a coffee shop in downtown Seattle"}'
+  -d '{"query": "Find points of interest near Dubai Marina"}'
 ```
 
-2. Looking for restaurants:
+2. Restaurant Search:
 ```bash
 curl -X POST http://localhost:8010/api/search \
   -H "Content-Type: application/json" \
-  -d '{"query": "What is the best Italian restaurant in New York City"}'
+  -d '{"query": "What are the best restaurants near Palm Jumeirah?"}'
 ```
 
-3. Finding parks:
+3. Family-Friendly Locations:
 ```bash
 curl -X POST http://localhost:8010/api/search \
   -H "Content-Type: application/json" \
-  -d '{"query": "Show me parks near Central Park"}'
+  -d '{"query": "Show me schools and parks near Downtown Dubai"}'
 ```
 
-### Sample Output
+### Sample Dubai Output
 
 ```json
 {
@@ -118,16 +156,17 @@ curl -X POST http://localhost:8010/api/search \
   "message": "Locations found successfully",
   "locations": [
     {
-      "name": "Cable Car Turnaround Powell St.",
-      "formatted_address": "Powell St, San Francisco, CA 94102, United States",
-      "latitude": 37.7847118,
-      "longitude": -122.4077009,
-      "place_id": "ChIJ8XAgrZ-AhYARyiCpDlYNaFs",
+      "name": "Dubai Marina Mall",
+      "formatted_address": "Sheikh Zayed Road, Dubai Marina, Dubai, United Arab Emirates",
+      "latitude": 25.0771,
+      "longitude": 55.1401,
+      "place_id": "ChIJB1zIXNxt4zsRHc_U_ZWrGQE",
       "types": [
+        "shopping_mall",
         "point_of_interest",
         "establishment"
       ],
-      "rating": 4.5
+      "rating": 4.4
     }
   ]
 }
@@ -146,7 +185,11 @@ Run the test script to verify the API functionality:
 python src/test_api.py
 ```
 
-The test script will run a series of queries and display the results.
+The test script includes:
+- General location queries
+- Profile-specific queries
+- Dubai-specific location tests
+- Different user demographic scenarios
 
 ## Error Handling
 
